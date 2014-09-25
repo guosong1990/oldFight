@@ -5,4 +5,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 	<string name="normalText">普通模式</string>
+	<string name="jiejiText">街机模式</string>
+	<string name="jishiText">计时模式</string>
 </resources>
