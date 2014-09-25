@@ -9,18 +9,25 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
 public class Enemy {
 	private Bitmap enemy;
-	private Rect enemyRect;
+	public Rect enemyRect;
 	private Rect rectL;
 	private Rect rectR;
 	private int rl;
-	public Enemy(Bitmap enemy,int gameW){
+	public static int speed =5;//敌机的共同速度，用屏幕的高度来计算，直接赋值会出现不同屏幕像素的手机敌机速度差异很大
+	public static int speedBase = 30;//速度基数
+	public boolean isLive; //判断敌机是否离开了屏幕如果是则在移除它
+	private int screenH;
+	public Enemy(Bitmap enemy,int gameW,int screenH){
 		this.enemy = enemy;
-		rectL = new Rect(GameSurfaceView.INTERVAL,-gameW*2/3+100,GameSurfaceView.INTERVAL+gameW/2,100);
-		rectR = new Rect(GameSurfaceView.INTERVAL+gameW/2,-gameW*2/3+100,GameSurfaceView.INTERVAL+gameW,100);
-		rl = RL();
+		this.screenH = screenH;
+		isLive = true;
+		rectL = new Rect(GameSurfaceView.interval,-gameW*2/3+100,GameSurfaceView.interval+gameW/2,100);
+		rectR = new Rect(GameSurfaceView.interval+gameW/2,-gameW*2/3+100,GameSurfaceView.interval+gameW,100);
+		rl = RL(); 
 		if(rl==0){
 			enemyRect = rectL;
 		}else {
@@ -39,8 +46,11 @@ public class Enemy {
 	 * 游戏逻辑
 	 */
 	public void logic(){
-		//this.enemyRect.inset(0, -5);
-		enemyRect.offset(0, 5);
+		enemyRect.offset(0, speed);//下降
+		//判断是否离开了屏幕
+		if(enemyRect.top>screenH){
+			isLive = false;
+		}
 	}
 	/*
 	 * 产生数字1或0表示从左还是右出现

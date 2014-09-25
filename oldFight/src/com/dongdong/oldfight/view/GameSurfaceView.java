@@ -1,11 +1,19 @@
 package com.dongdong.oldfight.view;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+
+import com.dongdong.oldfight.EndActivity;
+import com.dongdong.oldfight.MainActivity;
 import com.dongdong.oldfight.R;
 import com.dongdong.oldfight.Entity.Enemy;
 import com.dongdong.oldfight.Entity.Fight;
 
 import android.R.integer;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -30,16 +38,26 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 	private int screenW;
 	private int screenH;
 	private static int time = 60;//控制游戏的刷屏的速度
-	public static final int INTERVAL  = 80;//屏幕左右边距离
+	public static int interval;//屏幕左右边距离
 	private Rect rectL;
 	private Rect rectR;
 	private Rect fightRect;
 	private Context context;
 	private Bitmap fightbBitmap;
 	private Bitmap enemybBitmap;
-	private Enemy enemy;
 	private Fight fight;
 	private int gameW;
+	private List<Enemy> enemies = new ArrayList<Enemy>();//保存敌机
+	private int count;
+	private int fightH;//记录战机的高度
+	private int distance;//记录最近一个新增敌机距离屏幕的距离，方便添加下一个敌机
+	private int enemyDistance;
+	public static int myPoint;
+	
+	private Thread endThread;
+	private boolean end;
+	private int endcount = 20;//战机碰撞后一闪的计数
+	
 	public GameSurfaceView(Context context) {
 		super(context);
 		this.context = context;
@@ -47,7 +65,7 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 		sfh.addCallback(this);
 		paint = new Paint();
 		paint.setColor(Color.WHITE);
-		paint.setTextSize(30);
+		paint.setTextSize(50);
 		paint.setAntiAlias(true);
 		setFocusable(true);
 		setFocusableInTouchMode(true);
@@ -73,12 +91,18 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 		// TODO Auto-generated method stub
 		fightbBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.fight);
 		enemybBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.enemy);
-		gameW = screenW - 2*INTERVAL;
-		rectL = new Rect(INTERVAL, screenH-gameW*2/3, gameW/2+INTERVAL, screenH);//土飞机在左边
-		rectR = new Rect(INTERVAL+gameW/2, screenH-gameW*2/3, gameW+INTERVAL, screenH);//土飞机在右边
+		interval = screenW/6;
+		gameW = screenW - 2*interval;
+		fightH = gameW*2/3;
+		enemyDistance = screenH/15;
+		rectL = new Rect(interval, screenH-gameW*2/3, gameW/2+interval, screenH);//土飞机在左边
+		rectR = new Rect(interval+gameW/2, screenH-gameW*2/3, gameW+interval, screenH);//土飞机在右边
 		fightRect = rectL;
-		enemy = new Enemy(enemybBitmap, gameW);
 		fight = new Fight(fightbBitmap, gameW, screenH);
+		Enemy.speed = screenH/Enemy.speedBase;
+		end = false;
+		enemies.clear();
+		
 	}
 
 	@Override
@@ -98,38 +122,81 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 	public void run() {
 		// TODO Auto-generated method stub
 		while (flag) {
-			long start = System.currentTimeMillis();
-			myDraw();
-			logic();
-			long end = System.currentTimeMillis();
-			if(end-start<time){
+			if(!end){//不是结束执行
+				long start = System.currentTimeMillis();
+				logic();
+				myDraw();
+				long end = System.currentTimeMillis();
+				if(end-start<time){
+					try {
+						Thread.sleep(time-(end-start));
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}else{//结束时执行展现战机闪烁的效果
+				/*
+				 * 在这里记得添加碰撞的效果
+				 */
 				try {
-					Thread.sleep(time-(end-start));
+					Thread.sleep(1000);//暂停一秒钟然后转发
+					Intent intent = new Intent(MainActivity.instance, EndActivity.class);
+					MainActivity.instance.startActivity(intent);
+					flag = false;
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			
 			}
+			
 		}
 	}
 	
 	public void logic(){
-		enemy.logic();
+		//对屏幕的敌机进行逻辑处理，主要是下移操作
+		for (Iterator iterator = enemies.iterator(); iterator.hasNext();) {
+			Enemy enemy = (Enemy) iterator.next();
+			enemy.logic();
+		}
+		//采用iterator遍历同时删除会出异常，故采用另一只方式遍历，移除离开屏幕的
+		for (int i = 0; i < enemies.size();i++ ) {
+			
+			if(!enemies.get(i).isLive){//离开屏幕，在链表中移除
+				enemies.remove(i);
+				myPoint++;//分数增加
+			}
+		}
+
+		addEnemy();//添加敌机
 	}
 	public void myDraw(){
 		try {
 			canvas = sfh.lockCanvas();
 			if(canvas!=null){
 				canvas.drawColor(Color.WHITE);
-				//canvas.drawBitmap(fight, 100, 100, paint);
 				paint.setColor(Color.BLACK);
 				//绘制链条边界线
-				canvas.drawLine(INTERVAL, 0, INTERVAL, screenH, paint);
-				canvas.drawLine(INTERVAL+gameW, 0, INTERVAL+gameW, screenH, paint);
-				//canvas.drawBitmap(fightbBitmap, null, fightRect, paint);
+				canvas.drawLine(interval, 0, interval, screenH, paint);
+				canvas.drawLine(interval+gameW, 0, interval+gameW, screenH, paint);
 				
-				enemy.draw(canvas, paint);
+				for (Iterator iterator = enemies.iterator(); iterator.hasNext();) {
+					Enemy enemy = (Enemy) iterator.next();
+					enemy.draw(canvas, paint);
+				
+					//碰撞检测
+					if(enemy.enemyRect.bottom>fight.fightreRect.top){
+						if(enemy.enemyRect.right == fight.fightreRect.right||enemy.enemyRect.left == fight.fightreRect.left){
+							end = true;
+						}
+					}
+				}
+				
+				//绘制战机
 				fight.draw(canvas, paint);
+				//绘制分数
+				canvas.drawText("分数："+myPoint, 20, 60, paint);
 			}
 			
 		} catch (Exception e) {
@@ -149,6 +216,20 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 		return super.onTouchEvent(event);
 		
 	}
-
+/*
+ * 添加敌机函数
+ */
+	public void addEnemy(){
+		count++;
+		distance = Enemy.speed*count;
+		if(distance>2*fightH+getRandom(enemyDistance)+screenH/30){//加screenH/20是避免随机值小于screenH/20
+			count = 0;
+			enemies.add(new Enemy(fightbBitmap, gameW, screenH));
+		}
+	}
 	
+	public int getRandom(int base){
+		Random random = new  Random();
+		return random.nextInt(base);
+	}
 }
