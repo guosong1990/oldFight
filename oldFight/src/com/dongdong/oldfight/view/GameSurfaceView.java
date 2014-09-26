@@ -10,6 +10,7 @@ import com.dongdong.oldfight.MainActivity;
 import com.dongdong.oldfight.R;
 import com.dongdong.oldfight.Entity.Enemy;
 import com.dongdong.oldfight.Entity.Fight;
+import com.dongdong.oldfight.uitl.Const;
 
 import android.R.integer;
 import android.content.Context;
@@ -53,11 +54,12 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 	private int distance;//记录最近一个新增敌机距离屏幕的距离，方便添加下一个敌机
 	private int enemyDistance;
 	public static int myPoint;
-	
 	private Thread endThread;
 	private boolean end;
 	private int endcount = 20;//战机碰撞后一闪的计数
-	
+	private int addCount;
+	private long jishiStart;
+	private long jishiEnd;
 	public GameSurfaceView(Context context) {
 		super(context);
 		this.context = context;
@@ -102,7 +104,8 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 		Enemy.speed = screenH/Enemy.speedBase;
 		end = false;
 		enemies.clear();
-		
+		addCount = Const.addBase;
+		jishiStart = System.currentTimeMillis();
 	}
 
 	@Override
@@ -170,33 +173,62 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 		}
 
 		addEnemy();//添加敌机
+		
+		//加速判断
+		addCount--;
+		Log.e("addCount", addCount+"");
+		if(addCount==0){
+			addCount = Const.addBase;
+			Enemy.speed +=screenH/280;
+		}
+		
+		
 	}
 	public void myDraw(){
 		try {
 			canvas = sfh.lockCanvas();
 			if(canvas!=null){
-				canvas.drawColor(Color.WHITE);
-				paint.setColor(Color.BLACK);
+				canvas.drawColor(0xFFFFEFD5);
+				paint.setColor(0xFFFF7F24);
 				//绘制链条边界线
 				canvas.drawLine(interval, 0, interval, screenH, paint);
 				canvas.drawLine(interval+gameW, 0, interval+gameW, screenH, paint);
 				
-				for (Iterator iterator = enemies.iterator(); iterator.hasNext();) {
-					Enemy enemy = (Enemy) iterator.next();
+				for (int i = 0; i < enemies.size();i++ ) {
+					Enemy enemy = enemies.get(i);
 					enemy.draw(canvas, paint);
 				
 					//碰撞检测
 					if(enemy.enemyRect.bottom>fight.fightreRect.top){
 						if(enemy.enemyRect.right == fight.fightreRect.right||enemy.enemyRect.left == fight.fightreRect.left){
-							end = true;
+							if(Const.model.equals("jishi")){
+								enemies.remove(i);
+								myPoint-=2;//计时碰撞减掉2分，游戏继续
+							}else {
+								end = true;//游戏结束
+							}
 						}
 					}
 				}
 				
 				//绘制战机
 				fight.draw(canvas, paint);
-				//绘制分数
-				canvas.drawText("分数："+myPoint, 20, 60, paint);
+				//canvas.drawText("speed："+Enemy.speed, 20, 160, paint);//绘制速度
+				paint.setTextSize(screenW/15);
+				//计时模式的特殊处理，因为多个倒计时
+				if(Const.model.equals("jishi")){
+					//计时模式
+					jishiEnd = System.currentTimeMillis();
+					long temp = jishiEnd - jishiStart;
+					long remainTime = Const.time-temp/1000;
+					canvas.drawText("分数:"+myPoint+" 剩余:"+remainTime+"秒", screenW/30, screenH/25, paint);
+					if(remainTime<=0){
+						end = true;
+					}	
+				}else {
+					canvas.drawText("分数:"+myPoint, screenW/30, screenH/25, paint);
+				}
+		
 			}
 			
 		} catch (Exception e) {

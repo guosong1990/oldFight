@@ -63,15 +63,16 @@ public class EndView extends View {
 		
 		//点击了返回 有点复杂了，注意drawText中的文字的Y坐标
 		if(x>screenW/2-screenW/13-screenW/4&&y>screenH/4+screenH/3+screenH/15-screenW/13&&x<screenW/2-screenW/13-screenW/4+2*screenW/13&&y<screenH/4+screenH/3+screenH/15+10){
-			Toast.makeText(EndActivity.instance, "点击了返回", 7).show();
-			Intent intent = new Intent(EndActivity.instance,MenuActivity.class);
-			EndActivity.instance.startActivity(intent);
+			GameSurfaceView.myPoint = 0;
+			EndActivity.instance.finish();
+			MainActivity.instance.finish();
+			/*Intent intent = new Intent(EndActivity.instance,MenuActivity.class);
+			EndActivity.instance.startActivity(intent);*/
 			
 		}
 		
 		//点击了继续 有点复杂了，注意drawText中的文字的Y坐标
 		if(x>screenW/2-screenW/13&&y>screenH/4+screenH/3+screenH/15-screenW/13&&x<screenW/2-screenW/13+2*screenW/13&&y<screenH/4+screenH/3+screenH/15+10){
-			//Intent intent = new Intent(EndActivity.instance,MainActivity.class);
 			EndActivity.instance.finish();
 			
 		}

@@ -17,7 +17,7 @@ public class Enemy {
 	private Rect rectL;
 	private Rect rectR;
 	private int rl;
-	public static int speed =5;//敌机的共同速度，用屏幕的高度来计算，直接赋值会出现不同屏幕像素的手机敌机速度差异很大
+	public static int speed;//敌机的共同速度，用屏幕的高度来计算，直接赋值会出现不同屏幕像素的手机敌机速度差异很大。
 	public static int speedBase = 30;//速度基数
 	public boolean isLive; //判断敌机是否离开了屏幕如果是则在移除它
 	private int screenH;

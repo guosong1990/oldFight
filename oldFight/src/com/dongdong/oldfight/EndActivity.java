@@ -1,10 +1,12 @@
 package com.dongdong.oldfight;
 
+import com.dongdong.oldfight.uitl.Const;
 import com.dongdong.oldfight.view.EndView;
 import com.dongdong.oldfight.view.GameSurfaceView;
 
 import android.R.integer;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -33,11 +35,11 @@ public class EndActivity extends Activity{
 	 */
 	public void doPoints(){
 		SharedPreferences sharedPreferences = getSharedPreferences("oldFightNum", 0);
-		maxPoints = sharedPreferences.getInt("maxPoints", 0);
+		maxPoints = sharedPreferences.getInt(Const.model, 0);
 		if(GameSurfaceView.myPoint>maxPoints){
 			Editor editor = sharedPreferences.edit();
 			maxPoints = GameSurfaceView.myPoint;
-			editor.putInt("maxPoints", maxPoints);
+			editor.putInt(Const.model, maxPoints);
 			editor.commit();
 		}
 	}
@@ -46,7 +48,9 @@ public class EndActivity extends Activity{
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
 		if(keyCode == event.KEYCODE_BACK){
-			Log.e("点击了返回键", "应该回到主界面");//主界面还没做
+			GameSurfaceView.myPoint = 0;
+			finish();
+			MainActivity.instance.finish();
 			return false;
 		}
 		return super.onKeyDown(keyCode, event);
