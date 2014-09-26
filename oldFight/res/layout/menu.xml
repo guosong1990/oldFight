@@ -51,6 +51,23 @@
         android:textSize="30sp"
         android:text="@string/jishiText"
         />
-            
-
+          
+     <TextView
+        android:id="@+id/about"
+        android:gravity="center"
+        android:textColor="#FF7F24"
+        android:layout_marginTop="40dp"
+        android:layout_below="@id/jishi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="@string/about"
+        />
+	<LinearLayout
+		android:id="@+id/AdLinearLayout"
+		android:layout_marginTop="90dp"
+        android:layout_below="@id/about"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"/>
 </RelativeLayout>

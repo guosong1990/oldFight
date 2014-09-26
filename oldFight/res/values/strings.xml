@@ -7,4 +7,9 @@
 	<string name="normalText">普通模式</string>
 	<string name="jiejiText">极速模式</string>
 	<string name="jishiText">计时模式</string>
+	<string name="about">关于游戏</string>
+	<string name="abouttitle">关于游戏</string>
+	<string name="shuoming_content">\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020亲，首先感谢你下载本游戏，这就是对我们开发者的最大支持，为了给你带去更好的体验，你可以通过下载免费应用来移除游戏中的广告，当你的积分大于20个时，游戏中的广告将全部自动消失，永久有效，谢谢亲的支持哦=_=</string>
+	<string name="cancel">返回游戏</string>
+	<string name="noad">去除广告</string>
 </resources>

@@ -1,5 +1,8 @@
 package com.dongdong.oldfight.Entity;
-
+/**
+ * @author qingsong1990
+* ${tags}
+*/
 import java.util.Random;
 
 import com.dongdong.oldfight.view.GameSurfaceView;

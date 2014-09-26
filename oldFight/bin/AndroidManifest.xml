@@ -25,9 +25,9 @@
         
         <activity android:name="com.dongdong.oldfight.MainActivity"></activity>
         <activity android:name="com.dongdong.oldfight.EndActivity"></activity>
-        
-        <meta-data android:name="APP_ID" android:value="c72772256ff51e87b6915195bfef189c" />
-        <meta-data android:name="APP_PID" android:value="baidu" />
+        <activity android:name="com.dongdong.oldfight.AboutActivity"></activity>
+        <meta-data android:name="APP_ID" android:value="b44765d3236e3cba79808de9a1ffc254" />
+        <meta-data android:name="APP_PID" android:value="default" />
     </application>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

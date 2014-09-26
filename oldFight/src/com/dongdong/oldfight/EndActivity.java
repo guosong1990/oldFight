@@ -1,4 +1,9 @@
 package com.dongdong.oldfight;
+/**
+ * @author qingsong1990
+* ${tags}
+*/
+import cn.waps.AppConnect;
 
 import com.dongdong.oldfight.uitl.Const;
 import com.dongdong.oldfight.view.EndView;
@@ -11,9 +16,13 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 public class EndActivity extends Activity{
 
@@ -28,6 +37,20 @@ public class EndActivity extends Activity{
 		setContentView(new EndView(this));
 		doPoints();
 		instance = this;
+		
+		if(Const.myJifen<20){
+			/*互动广告*/		
+			LinearLayout adlayout = new LinearLayout(this);
+			adlayout.setGravity(Gravity.CENTER_HORIZONTAL);
+			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+			AppConnect.getInstance(this).showBannerAd(this, adlayout);
+			layoutParams.addRule(RelativeLayout.ALIGN_BOTTOM);//此代码可设置顶端或低端
+			this.addContentView(adlayout, layoutParams);
+			
+			AppConnect.getInstance(this).showPopAd(this);
+		}
+
+		
 	}
 	
 	/*

@@ -1,5 +1,8 @@
 package com.dongdong.oldfight.Entity;
-
+/**
+ * @author qingsong1990
+* ${tags}
+*/
 import com.dongdong.oldfight.view.GameSurfaceView;
 
 import android.R.integer;

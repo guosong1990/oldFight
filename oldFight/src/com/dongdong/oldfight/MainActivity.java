@@ -1,5 +1,8 @@
 package com.dongdong.oldfight;
-
+/**
+ * @author qingsong1990
+* ${tags}
+*/
 import com.dongdong.oldfight.view.GameSurfaceView;
 
 import android.support.v4.app.Fragment;

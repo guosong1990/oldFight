@@ -1,5 +1,8 @@
 package com.dongdong.oldfight.view;
-
+/**
+ * @author qingsong1990
+* ${tags}
+*/
 import com.dongdong.oldfight.EndActivity;
 import com.dongdong.oldfight.MainActivity;
 import com.dongdong.oldfight.MenuActivity;

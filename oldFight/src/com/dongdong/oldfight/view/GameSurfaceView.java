@@ -1,5 +1,8 @@
 package com.dongdong.oldfight.view;
-
+/**
+ * @author qingsong1990
+* ${tags}
+*/
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -176,7 +179,6 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 		
 		//º”ÀŸ≈–∂œ
 		addCount--;
-		Log.e("addCount", addCount+"");
 		if(addCount==0){
 			addCount = Const.addBase;
 			Enemy.speed +=screenH/280;
