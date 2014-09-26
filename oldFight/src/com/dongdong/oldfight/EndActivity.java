@@ -74,6 +74,7 @@ public class EndActivity extends Activity{
 			GameSurfaceView.myPoint = 0;
 			finish();
 			MainActivity.instance.finish();
+			MainActivity.fuhuoCount = 3;
 			return false;
 		}
 		return super.onKeyDown(keyCode, event);

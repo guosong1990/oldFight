@@ -3,9 +3,12 @@ package com.dongdong.oldfight.view;
  * @author qingsong1990
 * ${tags}
 */
+import cn.waps.AppConnect;
+
 import com.dongdong.oldfight.EndActivity;
 import com.dongdong.oldfight.MainActivity;
 import com.dongdong.oldfight.MenuActivity;
+import com.dongdong.oldfight.uitl.Const;
 
 import android.content.Context;
 import android.content.Intent;
@@ -69,14 +72,33 @@ public class EndView extends View {
 			GameSurfaceView.myPoint = 0;
 			EndActivity.instance.finish();
 			MainActivity.instance.finish();
-			/*Intent intent = new Intent(EndActivity.instance,MenuActivity.class);
-			EndActivity.instance.startActivity(intent);*/
+			MainActivity.fuhuoCount = 3;
 			
 		}
 		
-		//点击了继续 有点复杂了，注意drawText中的文字的Y坐标
+		//点击了继续 有点复活了，注意drawText中的文字的Y坐标
 		if(x>screenW/2-screenW/13&&y>screenH/4+screenH/3+screenH/15-screenW/13&&x<screenW/2-screenW/13+2*screenW/13&&y<screenH/4+screenH/3+screenH/15+10){
-			EndActivity.instance.finish();
+			
+			if(!Const.model.equals("jishi")){
+				if(MainActivity.fuhuoCount>0){
+					if(Const.myJifen>5){
+						AppConnect.getInstance(EndActivity.instance).spendPoints(5);
+						Toast.makeText(EndActivity.instance, "复活扣除5个积分,亲，一局最多复活三次！", 3).show();
+						EndActivity.instance.finish();
+						MainActivity.fuhuoCount--;
+					}else{
+						AppConnect.getInstance(EndActivity.instance).showAppOffers(EndActivity.instance);
+						Toast.makeText(EndActivity.instance, "亲，复活一次需要5个积分，你的积分不足，赶紧免费赚取积分吧！", 3).show();
+					}
+				}else {
+					Toast.makeText(EndActivity.instance, "亲，一局最多复活三次！你的次数已经满了！", 3).show();
+				}
+			}else {
+				Toast.makeText(EndActivity.instance, "亲，计时模式是不能复活的哦", 3).show();
+			}
+
+
+			
 			
 		}
 		//点击了重来 有点复杂了，注意drawText中的文字的Y坐标
