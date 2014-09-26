@@ -221,12 +221,17 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 					jishiEnd = System.currentTimeMillis();
 					long temp = jishiEnd - jishiStart;
 					long remainTime = Const.time-temp/1000;
-					canvas.drawText("分数:"+myPoint+" 剩余:"+remainTime+"秒", screenW/30, screenH/25, paint);
+				/*	canvas.drawText("分数:", 0, screenH/25, paint);
+					canvas.drawText(myPoint+"分", 0, 2*screenH/25, paint);
+					canvas.drawText("剩余:", interval+gameW, screenH/25, paint);
+					canvas.drawText(remainTime+"秒", interval+gameW, 2*screenH/25, paint);*/
+					canvas.drawText("分数:"+myPoint+" 剩余:"+remainTime+"秒", interval, screenH/25, paint);
 					if(remainTime<=0){
 						end = true;
 					}	
 				}else {
-					canvas.drawText("分数:"+myPoint, screenW/30, screenH/25, paint);
+					canvas.drawText("分数:"+myPoint+"分", interval, screenH/25, paint);
+					//canvas.drawText(myPoint+"分", 0, 2*screenH/25, paint);
 				}
 		
 			}
@@ -256,7 +261,7 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 		distance = Enemy.speed*count;
 		if(distance>2*fightH+getRandom(enemyDistance)+screenH/30){//加screenH/20是避免随机值小于screenH/20
 			count = 0;
-			enemies.add(new Enemy(fightbBitmap, gameW, screenH));
+			enemies.add(new Enemy(enemybBitmap, gameW, screenH));
 		}
 	}
 	
