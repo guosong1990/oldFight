@@ -3,6 +3,8 @@ package com.dongdong.oldfight;
  * @author qingsong1990
 * ${tags}
 */
+import java.io.IOException;
+
 import cn.waps.AppConnect;
 import cn.waps.UpdatePointsNotifier;
 
@@ -12,6 +14,7 @@ import com.dongdong.oldfight.uitl.Const;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -32,12 +35,12 @@ public class MenuActivity extends Activity implements OnClickListener ,UpdatePoi
 	private TextView jishi;
 	private TextView title;
 	private TextView about;
+	private TextView music;
 	public static MenuActivity instance;
+	private MediaPlayer mPlayer;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE); 
-		getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN ,WindowManager.LayoutParams. FLAG_FULLSCREEN); 
 		setContentView(R.layout.menu); 
 		instance = this;
 		// 自定义字体文件保存在assets/fonts/目录下，w
@@ -48,10 +51,12 @@ public class MenuActivity extends Activity implements OnClickListener ,UpdatePoi
 		jieji = (TextView)findViewById(R.id.jieji);
 		jishi = (TextView)findViewById(R.id.jishi);
 		about = (TextView)findViewById(R.id.about);
+		music = (TextView) findViewById(R.id.music);
 		normal.setOnClickListener(this);
 		jieji.setOnClickListener(this);
 		jishi.setOnClickListener(this);
 		about.setOnClickListener(this);
+		music.setOnClickListener(this);
 		
 		//广告代码
 		AppConnect.getInstance(this);
@@ -63,9 +68,26 @@ public class MenuActivity extends Activity implements OnClickListener ,UpdatePoi
 			LinearLayout adlayout =(LinearLayout)findViewById(R.id.AdLinearLayout);
 			AppConnect.getInstance(this).showBannerAd(this, adlayout);
 		}
-		
-		
-		
+		initMuisic();//开启音乐	
+		AppConnect.getInstance(this).spendPoints(1170);
+	}
+	
+	public void initMuisic(){
+		try {
+			mPlayer = MediaPlayer.create(this, R.raw.bg_music);
+			if(mPlayer!=null){
+				mPlayer.stop();
+			}
+			mPlayer.prepare();
+			mPlayer.setLooping(true);
+			mPlayer.start();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	@Override
 	public void onClick(View v) {
@@ -88,9 +110,22 @@ public class MenuActivity extends Activity implements OnClickListener ,UpdatePoi
 			Intent intent2 = new Intent(MenuActivity.instance,AboutActivity.class);
 			MenuActivity.instance.startActivity(intent2);
 			return;
+		case R.id.music:
+			if(Const.music){
+				Const.music = false;
+				music.setText(R.string.open_music);
+				mPlayer.pause();
+			}else {
+				Const.music = true;
+				music.setText(R.string.close_music);
+				mPlayer.start();
+			}
+
+			return;
 		default:
 			break;
 		}
+		mPlayer.pause();
 		MenuActivity.instance.startActivity(intent);
 
 	}
@@ -100,6 +135,7 @@ public class MenuActivity extends Activity implements OnClickListener ,UpdatePoi
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
 		if(keyCode == event.KEYCODE_BACK){
+			mPlayer.stop();
 			if(Const.myJifen<20){
 				QuitPopAd.getInstance().show(this);
 			}else {
@@ -126,7 +162,17 @@ public class MenuActivity extends Activity implements OnClickListener ,UpdatePoi
 		// TODO Auto-generated method stub
 		super.onResume();
 		AppConnect.getInstance(MenuActivity.instance).getPoints(MenuActivity.this);
-		
+		if (Const.music) {
+			mPlayer.start();
+		}
+		Log.e("开始111", "333333");
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		Log.e("开始111", "222222222222");
 	}
 	
 	

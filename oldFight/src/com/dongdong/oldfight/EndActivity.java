@@ -4,6 +4,7 @@ package com.dongdong.oldfight;
 * ${tags}
 */
 import cn.waps.AppConnect;
+import cn.waps.UpdatePointsNotifier;
 
 import com.dongdong.oldfight.uitl.Const;
 import com.dongdong.oldfight.view.EndView;
@@ -24,7 +25,7 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-public class EndActivity extends Activity{
+public class EndActivity extends Activity implements UpdatePointsNotifier{
 
 	public static int maxPoints;
 	public static EndActivity instance;
@@ -79,6 +80,24 @@ public class EndActivity extends Activity{
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see cn.waps.UpdatePointsNotifier#getUpdatePoints(java.lang.String, int)
+	 */
+	@Override
+	public void getUpdatePoints(String arg0, int arg1) {
+		// TODO Auto-generated method stub
+		Const.myJifen = arg1;
+		Log.e("我的分数", arg0+"");
+	}
+
+	/* (non-Javadoc)
+	 * @see cn.waps.UpdatePointsNotifier#getUpdatePointsFailed(java.lang.String)
+	 */
+	@Override
+	public void getUpdatePointsFailed(String arg0) {
+		// TODO Auto-generated method stub
+		
+	}	
 	
 }
