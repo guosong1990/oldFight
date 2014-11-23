@@ -3,7 +3,9 @@ package com.dongdong.oldfight.view;
  * @author qingsong1990
 * ${tags}
 */
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -16,6 +18,7 @@ import com.dongdong.oldfight.Entity.Fight;
 import com.dongdong.oldfight.uitl.Const;
 
 import android.R.integer;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -24,6 +27,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.net.NetworkInfo.State;
 import android.os.Message;
 import android.util.Log;
@@ -63,6 +69,8 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 	private int addCount;
 	private long jishiStart;
 	private long jishiEnd;
+	private SoundPool soundPool;
+	private HashMap<Integer, Integer> soundPoolMap;
 	public GameSurfaceView(Context context) {
 		super(context);
 		this.context = context;
@@ -92,7 +100,7 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 		thread.start();
 	}
 
-	public  void initGame() {
+	@SuppressLint("UseSparseArrays") public  void initGame() {
 		// TODO Auto-generated method stub
 		fightbBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.fight);
 		enemybBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.enemy);
@@ -109,6 +117,15 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 		enemies.clear();
 		addCount = Const.addBase;
 		jishiStart = System.currentTimeMillis();
+		if(Const.music){
+			soundPool = new SoundPool(4,AudioManager.STREAM_MUSIC,100);
+			soundPoolMap = new HashMap<Integer, Integer>();
+			soundPoolMap.put(1, soundPool.load(context, R.raw.pen,1));//碰撞声
+			soundPoolMap.put(2, soundPool.load(context, R.raw.endgame, 1));//游戏结束声音
+			soundPoolMap.put(3, soundPool.load(context, R.raw.jishiend, 1));//计时游戏结束声音
+		}
+
+
 	}
 
 	@Override
@@ -145,12 +162,25 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 				/*
 				 * 在这里记得添加碰撞的效果
 				 */
+
 				try {
-					Thread.sleep(1000);//暂停一秒钟然后转发
+					if(Const.music){
+						MainActivity.mPlayer.pause();
+						Thread.sleep(500);
+						if(Const.model.equals("jishi")){
+							soundPool.play(soundPoolMap.get(3), 1, 1, 0, 0, 1);//播放介绍声音
+
+						}else {
+							soundPool.play(soundPoolMap.get(2), 1, 1, 0, 0, 1);//播放介绍声音
+
+						}
+					}
+
+					Thread.sleep(4000);//暂停一秒钟然后转发
 					Intent intent = new Intent(MainActivity.instance, EndActivity.class);
 					MainActivity.instance.startActivity(intent);
 					flag = false;
-				} catch (InterruptedException e) {
+				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -206,6 +236,7 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 							if(Const.model.equals("jishi")){
 								enemies.remove(i);
 								myPoint-=2;//计时碰撞减掉2分，游戏继续
+								soundPool.play(soundPoolMap.get(1), 1, 1, 0, 0, 1);
 							}else {
 								end = true;//游戏结束
 							}

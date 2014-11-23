@@ -20,7 +20,7 @@
         android:id="@+id/normal"
         android:gravity="center"
         android:textColor="#FF7F24"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="40dp"
         android:layout_below="@id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
        android:id="@+id/jieji"
        android:gravity="center"
        android:textColor="#FF7F24"
-       android:layout_marginTop="40dp"
+       android:layout_marginTop="20dp"
        android:layout_below="@id/normal"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
@@ -44,25 +44,36 @@
         android:id="@+id/jishi"
         android:gravity="center"
         android:textColor="#FF7F24"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:layout_below="@id/jieji"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="30sp"
         android:text="@string/jishiText"
         />
-          
+     <TextView
+        android:id="@+id/music"
+        android:gravity="center"
+        android:textColor="#FF7F24"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/jishi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="@string/close_music"
+        />            
      <TextView
         android:id="@+id/about"
         android:gravity="center"
         android:textColor="#FF7F24"
-        android:layout_marginTop="40dp"
-        android:layout_below="@id/jishi"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/music"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="30sp"
         android:text="@string/about"
         />
+   
 	<LinearLayout
 		android:id="@+id/AdLinearLayout"
 		android:layout_marginTop="90dp"
