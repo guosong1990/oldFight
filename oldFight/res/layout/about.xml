@@ -15,6 +15,7 @@
         android:textColor="#FF7F24"
          android:textSize="30sp"/>
      <TextView
+        android:id="@+id/shuoming"
         android:layout_width="wrap_content"
         android:paddingTop="10dp"
         android:paddingLeft="10dp"

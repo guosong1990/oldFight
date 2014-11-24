@@ -61,15 +61,20 @@ public class MenuActivity extends Activity implements OnClickListener ,UpdatePoi
 		//广告代码
 		AppConnect.getInstance(this);
 		AppConnect.getInstance(this).getPoints(this);
-		
-		if(Const.myJifen<20){
+		String showad = AppConnect.getInstance(this).getConfig("showad", "yes");
+		if(showad.equals("yes")){
+			Const.hasAd = true;
+		}else {
+			Const.hasAd = false;
+		}
+		Log.e("showad", showad);
+		if(Const.myJifen<20&&Const.hasAd){
 			AppConnect.getInstance(this).initPopAd(this);
 			/*互动广告*/		
 			LinearLayout adlayout =(LinearLayout)findViewById(R.id.AdLinearLayout);
 			AppConnect.getInstance(this).showBannerAd(this, adlayout);
 		}
 		initMuisic();//开启音乐	
-		AppConnect.getInstance(this).spendPoints(1170);
 	}
 	
 	public void initMuisic(){
@@ -136,7 +141,7 @@ public class MenuActivity extends Activity implements OnClickListener ,UpdatePoi
 		// TODO Auto-generated method stub
 		if(keyCode == event.KEYCODE_BACK){
 			mPlayer.stop();
-			if(Const.myJifen<20){
+			if(Const.hasAd&&Const.myJifen<20){
 				QuitPopAd.getInstance().show(this);
 			}else {
 				MenuActivity.instance.finish();

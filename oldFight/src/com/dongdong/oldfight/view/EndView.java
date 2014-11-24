@@ -78,18 +78,25 @@ public class EndView extends View {
 		
 		//点击了继续 有点复活了，注意drawText中的文字的Y坐标
 		if(x>screenW/2-screenW/13&&y>screenH/4+screenH/3+screenH/15-screenW/13&&x<screenW/2-screenW/13+2*screenW/13&&y<screenH/4+screenH/3+screenH/15+10){
-			AppConnect.getInstance(EndActivity.instance).getPoints();
-			if(!Const.model.equals("jishi")){
-				if(MainActivity.fuhuoCount>0){
-					if(Const.myJifen>5){
-						AppConnect.getInstance(EndActivity.instance).spendPoints(5);
-						Toast.makeText(EndActivity.instance, "复活扣除5个积分,亲，一局最多复活三次！", 3).show();
+			AppConnect.getInstance(EndActivity.instance).getPoints(EndActivity.instance);
+			//下面因为添加了关闭广告的参数，导致有点混乱了，不过测试没问题
+			if(!Const.model.equals("jishi")){//计时模式没有复活
+				if(MainActivity.fuhuoCount>0){//复活次数不能超过三次
+					if(Const.hasAd){//是否展示广告
+						if(Const.myJifen>5){
+							AppConnect.getInstance(EndActivity.instance).spendPoints(5);
+							Toast.makeText(EndActivity.instance, "复活扣除5个积分,亲，一局最多复活三次！", 3).show();
+							EndActivity.instance.finish();
+							MainActivity.fuhuoCount--;
+						}else{
+							AppConnect.getInstance(EndActivity.instance).showAppOffers(EndActivity.instance);
+							Toast.makeText(EndActivity.instance, "亲，复活一次需要5个积分，你的积分不足，赶紧免费赚取积分吧！", 3).show();
+						}
+					}else {
 						EndActivity.instance.finish();
 						MainActivity.fuhuoCount--;
-					}else{
-						AppConnect.getInstance(EndActivity.instance).showAppOffers(EndActivity.instance);
-						Toast.makeText(EndActivity.instance, "亲，复活一次需要5个积分，你的积分不足，赶紧免费赚取积分,然后重新开始吧！", 3).show();
 					}
+
 				}else {
 					Toast.makeText(EndActivity.instance, "亲，一局最多复活三次！你的次数已经满了！", 3).show();
 				}
