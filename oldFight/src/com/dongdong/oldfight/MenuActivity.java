@@ -61,8 +61,14 @@ public class MenuActivity extends Activity implements OnClickListener ,UpdatePoi
 		//广告代码
 		AppConnect.getInstance(this);
 		AppConnect.getInstance(this).getPoints(this);
-		
-		if(Const.myJifen<20){
+		String showad = AppConnect.getInstance(this).getConfig("showad", "yes");
+		if(showad.equals("yes")){
+			Const.hasAd = true;
+		}else {
+			Const.hasAd = false;
+		}
+		Log.e("showad", showad);
+		if(Const.myJifen<20&&Const.hasAd){
 			AppConnect.getInstance(this).initPopAd(this);
 			/*互动广告*/		
 			LinearLayout adlayout =(LinearLayout)findViewById(R.id.AdLinearLayout);

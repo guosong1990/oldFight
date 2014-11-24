@@ -55,6 +55,8 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 	private Context context;
 	private Bitmap fightbBitmap;
 	private Bitmap enemybBitmap;
+	private Bitmap wallbBitmap;
+
 	private Fight fight;
 	private int gameW;
 	private List<Enemy> enemies = new ArrayList<Enemy>();//保存敌机
@@ -100,10 +102,13 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 		thread.start();
 	}
 
-	@SuppressLint("UseSparseArrays") public  void initGame() {
+
+	@SuppressLint("UseSparseArrays")
+	public  void initGame() {
 		// TODO Auto-generated method stub
 		fightbBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.fight);
 		enemybBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.enemy);
+		wallbBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.bord);
 		interval = screenW/6;
 		gameW = screenW - 2*interval;
 		fightH = gameW*2/3;
@@ -175,7 +180,6 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 
 						}
 					}
-
 					Thread.sleep(4000);//暂停一秒钟然后转发
 					Intent intent = new Intent(MainActivity.instance, EndActivity.class);
 					MainActivity.instance.startActivity(intent);
@@ -225,7 +229,11 @@ public class GameSurfaceView extends SurfaceView implements Callback,Runnable{
 				//绘制链条边界线
 				canvas.drawLine(interval, 0, interval, screenH, paint);
 				canvas.drawLine(interval+gameW, 0, interval+gameW, screenH, paint);
-				
+				Rect wallL = new Rect(0,0,interval,screenH);
+				Rect wallR = new Rect(interval+gameW,0,screenW,screenH);
+				canvas.drawBitmap(wallbBitmap, null, wallL, paint);
+				canvas.drawBitmap(wallbBitmap, null, wallR, paint);
+
 				for (int i = 0; i < enemies.size();i++ ) {
 					Enemy enemy = enemies.get(i);
 					enemy.draw(canvas, paint);

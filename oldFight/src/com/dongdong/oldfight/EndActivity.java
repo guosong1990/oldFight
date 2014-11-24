@@ -39,7 +39,7 @@ public class EndActivity extends Activity implements UpdatePointsNotifier{
 		doPoints();
 		instance = this;
 		
-		if(Const.myJifen<20){
+		if(Const.myJifen<20&&Const.hasAd){
 			/*»¥¶¯¹ã¸æ*/		
 			LinearLayout adlayout = new LinearLayout(this);
 			adlayout.setGravity(Gravity.CENTER_HORIZONTAL);
